@@ -89,10 +89,10 @@ for n = 1:N
         tmp = strsplit(raw{n},{'.','\'});
         hydro(F).body{b} = tmp{length(tmp)-1};  % Body names
     end
-    if isempty(strfind(raw{n},'Number of wave frequencies'))==0
-        tmp = textscan(raw{n},'%f %f %f');
-        hydro(F).Nf = tmp{1};  % Number of wave frequencies
-        hydro(F).w = linspace(tmp{2},tmp{3},tmp{1});  % Wave frequencies
+    if isempty(strfind(raw{n},'Number of wave frequencies'))==0 
+        tmp = textscan(raw{n},'%f %f %f %f'); %added a new %f because of NEMOH3.0 Nemol.cal format change
+        hydro(F).Nf = tmp{2};  % Number of wave frequencies %changed from tmp1 to tmp2 
+        hydro(F).w = linspace(tmp{3},tmp{4},tmp{2});  % Wave frequencies %changed 2,3,1 to 3,4,2 
         hydro(F).T = 2*pi./hydro(F).w;  % Wave periods
     end
     if isempty(strfind(raw{n},'Number of wave directions'))==0
@@ -170,7 +170,7 @@ fclose(fileID);
 N = length(raw);
 i = 0;
 for n = 1:N
-    if isempty(strfind(raw{n},'Diffraction force'))==0
+    if isempty(strfind(raw{n},'Excitation force'))==0  %Changed from 'Diffraction' to 'Excitation'
         i = i+1;
         for k = 1:hydro(F).Nf
             tmp = textscan(raw{n+k},'%f');
